@@ -62,6 +62,8 @@ f = st.selectbox(
 st.divider()
 
 # Prediction
+
+
 if st.button("🔍 Predict Surface Roughness", use_container_width=True):
 
     input_data = pd.DataFrame(
@@ -82,7 +84,6 @@ if st.button("🔍 Predict Surface Roughness", use_container_width=True):
 
     st.success("Prediction completed successfully!")
 
-    # Interpretation
     st.subheader("💡 Result Interpretation")
 
     st.write(
@@ -93,10 +94,8 @@ if st.button("🔍 Predict Surface Roughness", use_container_width=True):
     st.info("""
     **What does this result mean?**
 
-    - Surface roughness indicates the quality and smoothness
-      of the machined surface.
-    - A lower Ra value generally indicates a smoother surface.
-    - A higher Ra value generally indicates a rougher surface.
+    - Lower Ra generally indicates a smoother surface.
+    - Higher Ra generally indicates a rougher surface.
     """)
 
     st.subheader("⚙️ Selected Machining Parameters")
@@ -117,9 +116,8 @@ if st.button("🔍 Predict Surface Roughness", use_container_width=True):
     st.table(result_table)
 
     st.caption(
-        "Note: This prediction is based on the trained "
-        "machine learning model. Actual machining results "
-        "may vary depending on machine and tool conditions."
+        "Actual machining results may vary depending on "
+        "machine and tool conditions."
     )
 
 # Footer
