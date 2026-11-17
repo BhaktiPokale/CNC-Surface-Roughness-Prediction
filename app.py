@@ -31,7 +31,6 @@ st.markdown("""
     color: #EAF3F8;
 }
 
-/* Main Container */
 .block-container {
     max-width: 1150px;
     padding-top: 2rem;
@@ -107,21 +106,35 @@ div[data-testid="stMetricValue"] {
     font-weight: 800;
 }
 
-/* Input Fields */
-div[data-baseweb="select"] > div {
-    background-color: #193653;
-    border: 1px solid #19C5D8;
-    border-radius: 10px;
-}
-
+/* Input Boxes */
 div[data-baseweb="input"] > div {
-    background-color: #193653;
+    background-color: #FFFFFF !important;
     border: 1px solid #19C5D8;
     border-radius: 10px;
 }
 
-input {
-    color: #FFFFFF !important;
+/* Make input numbers black */
+div[data-baseweb="input"] input {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+    background-color: #FFFFFF !important;
+}
+
+/* Dropdown Boxes */
+div[data-baseweb="select"] > div {
+    background-color: #FFFFFF !important;
+    border: 1px solid #19C5D8;
+    border-radius: 10px;
+}
+
+/* Make selected dropdown values black */
+div[data-baseweb="select"] input {
+    color: #000000 !important;
+    -webkit-text-fill-color: #000000 !important;
+}
+
+div[data-baseweb="select"] span {
+    color: #000000 !important;
 }
 
 /* Prediction Button */
