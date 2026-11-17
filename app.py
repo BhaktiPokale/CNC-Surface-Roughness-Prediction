@@ -3,9 +3,9 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-# ---------------------------------
+# --------------------------------
 # PAGE CONFIGURATION
-# ---------------------------------
+# --------------------------------
 
 st.set_page_config(
     page_title="CNC Surface Roughness Prediction",
@@ -13,9 +13,9 @@ st.set_page_config(
     layout="centered"
 )
 
-# ---------------------------------
+# --------------------------------
 # LOAD TRAINED MODEL
-# ---------------------------------
+# --------------------------------
 
 try:
     model = joblib.load("best_model.pkl")
@@ -25,38 +25,41 @@ except Exception as e:
     st.error(f"Model loading error: {e}")
     st.stop()
 
-# ---------------------------------
-# APPLICATION TITLE
-# ---------------------------------
+# --------------------------------
+# TITLE
+# --------------------------------
 
 st.title("⚙️ CNC Surface Roughness Prediction")
 
 st.write("""
 Welcome to the CNC Surface Roughness Prediction System.
 
-This application uses a Machine Learning model to predict
-surface roughness based on selected CNC machining parameters.
+This application uses Machine Learning to predict the
+surface roughness of a CNC machined component based on
+selected machining parameters.
 """)
 
 st.divider()
 
-# ---------------------------------
+# --------------------------------
 # USER GUIDELINES
-# ---------------------------------
+# --------------------------------
 
 st.subheader("📌 User Guidelines")
 
 st.info("""
-1. Enter the Depth of Cut within the given range.
-2. Select the required Cutting Speed.
-3. Select the required Feed Rate.
-4. Click the Predict Surface Roughness button.
-5. View your predicted result and its interpretation.
+1. Enter the Depth of Cut.
+2. Select the Cutting Speed.
+3. Select the Feed Rate.
+4. Click the Predict button.
+5. View the predicted surface roughness.
+6. Check whether the surface is Smooth,
+   Moderately Rough, or Rough.
 """)
 
-# ---------------------------------
+# --------------------------------
 # MACHINING PARAMETERS
-# ---------------------------------
+# --------------------------------
 
 st.subheader("🔧 Enter Machining Parameters")
 
@@ -83,9 +86,9 @@ f = st.selectbox(
 
 st.divider()
 
-# ---------------------------------
-# PREDICTION SECTION
-# ---------------------------------
+# --------------------------------
+# PREDICTION
+# --------------------------------
 
 if st.button(
     "🔍 Predict Surface Roughness",
@@ -100,17 +103,15 @@ if st.button(
             columns=["ap", "vc", "f"]
         )
 
-        # Match model feature order
-
         input_data = input_data[feature_columns]
 
-        # Make prediction
+        # Predict surface roughness
 
-        prediction = model.predict(input_data)[0]
+        prediction = float(model.predict(input_data)[0])
 
-        # ---------------------------------
-        # DISPLAY RESULT
-        # ---------------------------------
+        # --------------------------------
+        # DISPLAY PREDICTION
+        # --------------------------------
 
         st.subheader("📊 Prediction Result")
 
@@ -121,30 +122,58 @@ if st.button(
 
         st.success("Prediction completed successfully!")
 
-        # ---------------------------------
-        # RESULT INTERPRETATION
-        # ---------------------------------
+        # --------------------------------
+        # SURFACE FINISH ASSESSMENT
+        # --------------------------------
 
-        st.subheader("💡 Result Interpretation")
+        st.subheader("🔍 Surface Finish Assessment")
 
-        st.write(
-            f"Based on the selected machining parameters, "
-            f"the predicted surface roughness is "
-            f"{prediction:.4f} µm."
-        )
+        # Provisional thresholds:
+        # Replace with validated project limits.
+
+        if prediction < 0.8:
+
+            st.success("🟢 SMOOTH SURFACE")
+
+            st.write("""
+            The predicted surface has relatively low
+            roughness and indicates a smoother finish.
+            """)
+
+        elif prediction < 1.6:
+
+            st.warning("🟡 MODERATELY ROUGH SURFACE")
+
+            st.write("""
+            The predicted surface has a moderate level
+            of roughness.
+            """)
+
+        else:
+
+            st.error("🔴 ROUGH SURFACE")
+
+            st.write("""
+            The predicted surface has relatively high
+            roughness and indicates a rougher finish.
+            """)
+
+        # --------------------------------
+        # SURFACE ROUGHNESS EXPLANATION
+        # --------------------------------
+
+        st.subheader("💡 Understanding the Result")
 
         st.info("""
-        **Understanding Surface Roughness**
-
-        - Lower Ra values generally indicate smoother surfaces.
-        - Higher Ra values generally indicate rougher surfaces.
-        - The acceptable roughness depends on the component's
-          application and required surface finish.
+        - Lower Ra value = Smoother surface.
+        - Higher Ra value = Rougher surface.
+        - Surface finish quality depends on the
+          required application and specifications.
         """)
 
-        # ---------------------------------
-        # DISPLAY SELECTED PARAMETERS
-        # ---------------------------------
+        # --------------------------------
+        # SELECTED PARAMETERS
+        # --------------------------------
 
         st.subheader("⚙️ Selected Machining Parameters")
 
@@ -164,22 +193,25 @@ if st.button(
 
         st.table(result_table)
 
-        # ---------------------------------
+        # --------------------------------
         # FINAL NOTE
-        # ---------------------------------
+        # --------------------------------
 
         st.caption("""
-        Note: Predictions are generated using the trained
-        Machine Learning model. Actual machining results may
-        vary depending on machine, tool and material conditions.
+        Note: Results are generated using a trained
+        Machine Learning model. Actual machining results
+        may vary depending on machine, tool and material
+        conditions. Surface finish categories use
+        provisional thresholds and should be validated.
         """)
 
     except Exception as e:
+
         st.error(f"Prediction error: {e}")
 
-# ---------------------------------
+# --------------------------------
 # FOOTER
-# ---------------------------------
+# --------------------------------
 
 st.divider()
 
@@ -187,4 +219,3 @@ st.caption(
     "CNC Surface Roughness Prediction | "
     "Machine Learning Based Application"
 )
-
