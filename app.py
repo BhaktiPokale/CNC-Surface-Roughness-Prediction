@@ -20,14 +20,8 @@ st.set_page_config(
 st.markdown("""
 <style>
 
-/* Main Background */
 .stApp {
-    background: linear-gradient(
-        135deg,
-        #101B2D 0%,
-        #14263D 55%,
-        #193653 100%
-    );
+    background: linear-gradient(135deg, #101B2D, #14263D, #193653);
     color: #EAF3F8;
 }
 
@@ -37,35 +31,26 @@ st.markdown("""
     padding-bottom: 2rem;
 }
 
-/* Headings */
 h1, h2, h3 {
     color: #19C5D8 !important;
     font-weight: 800 !important;
 }
 
-/* Normal Text */
 p, label, li {
     color: #D6E4EF !important;
 }
 
-/* Header */
 header[data-testid="stHeader"] {
     background: transparent;
 }
 
 /* Hero Banner */
 .hero {
-    background: linear-gradient(
-        120deg,
-        #193653,
-        #244966,
-        #147C91
-    );
+    background: linear-gradient(120deg, #193653, #244966, #147C91);
     padding: 35px;
     border-radius: 20px;
     border: 1px solid #19C5D8;
     margin-bottom: 25px;
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
 }
 
 .hero h1 {
@@ -75,7 +60,6 @@ header[data-testid="stHeader"] {
 
 .hero p {
     color: #C9EAF0 !important;
-    font-size: 16px;
 }
 
 /* Cards */
@@ -85,13 +69,9 @@ div[data-testid="stVerticalBlockBorderWrapper"] {
     border-radius: 16px;
 }
 
-/* Metric Cards */
+/* Metric */
 div[data-testid="stMetric"] {
-    background: linear-gradient(
-        135deg,
-        #193653,
-        #244966
-    );
+    background: linear-gradient(135deg, #193653, #244966);
     padding: 20px;
     border-radius: 15px;
     border: 1px solid #19C5D8;
@@ -113,7 +93,6 @@ div[data-baseweb="input"] > div {
     border-radius: 10px;
 }
 
-/* Make input numbers black */
 div[data-baseweb="input"] input {
     color: #000000 !important;
     -webkit-text-fill-color: #000000 !important;
@@ -127,7 +106,6 @@ div[data-baseweb="select"] > div {
     border-radius: 10px;
 }
 
-/* Make selected dropdown values black */
 div[data-baseweb="select"] input {
     color: #000000 !important;
     -webkit-text-fill-color: #000000 !important;
@@ -139,29 +117,36 @@ div[data-baseweb="select"] span {
 
 /* Prediction Button */
 .stButton > button {
-    background: linear-gradient(
-        90deg,
-        #19C5D8,
-        #00A6C7
-    );
+    background: linear-gradient(90deg, #19C5D8, #00A6C7);
     color: #101B2D !important;
     border: none;
     border-radius: 12px;
     padding: 14px;
     font-size: 17px;
     font-weight: bold;
-    transition: 0.3s;
 }
 
 .stButton > button:hover {
     background: #FFFFFF;
     color: #101B2D !important;
-    border: 1px solid #19C5D8;
 }
 
-/* Alerts */
-.stAlert {
+/* SUCCESS, WARNING AND ERROR MESSAGES: BLACK TEXT */
+div[data-testid="stAlert"] {
+    background-color: #FFFFFF !important;
+    border: 1px solid #19C5D8 !important;
     border-radius: 12px;
+}
+
+div[data-testid="stAlert"] p,
+div[data-testid="stAlert"] span,
+div[data-testid="stAlert"] li {
+    color: #000000 !important;
+}
+
+/* Important Note */
+div[data-testid="stAlert"] strong {
+    color: #000000 !important;
 }
 
 /* Tables */
@@ -244,30 +229,24 @@ st.subheader("⚙️ Machining Parameters")
 col1, col2, col3 = st.columns(3)
 
 with col1:
-
     ap = st.number_input(
         "📏 Depth of Cut (mm)",
         min_value=0.25,
         max_value=0.80,
         value=0.50,
-        step=0.05,
-        help="Enter the depth of material removed."
+        step=0.05
     )
 
 with col2:
-
     vc = st.selectbox(
         "⚡ Cutting Speed (m/min)",
-        [310, 350, 390],
-        help="Select the cutting speed."
+        [310, 350, 390]
     )
 
 with col3:
-
     f = st.selectbox(
         "🔧 Feed Rate (mm/rev)",
-        [0.07, 0.10, 0.13],
-        help="Select the feed rate per revolution."
+        [0.07, 0.10, 0.13]
     )
 
 st.markdown("---")
@@ -276,36 +255,23 @@ st.markdown("---")
 # PREDICTION SECTION
 # ==========================================
 
-if st.button(
-    "🔍 PREDICT SURFACE ROUGHNESS",
-    use_container_width=True
-):
+if st.button("🔍 PREDICT SURFACE ROUGHNESS", use_container_width=True):
 
     try:
-
-        # Prepare input data
 
         input_data = pd.DataFrame(
             [[ap, vc, f]],
             columns=["ap", "vc", "f"]
         )
 
-        # Match training feature order
-
         input_data = input_data[feature_columns]
 
-        # Generate prediction
-
-        prediction = float(
-            model.predict(input_data)[0]
-        )
+        prediction = float(model.predict(input_data)[0])
 
         if not pd.notna(prediction):
             raise ValueError("Invalid prediction returned by model.")
 
-        # ==================================
-        # PREDICTION RESULT
-        # ==================================
+        # Prediction Result
 
         st.subheader("📊 Prediction Result")
 
@@ -316,14 +282,9 @@ if st.button(
 
         st.success("Prediction completed successfully!")
 
-        # ==================================
-        # SURFACE FINISH ASSESSMENT
-        # ==================================
+        # Surface Finish Assessment
 
         st.subheader("🔍 Surface Finish Assessment")
-
-        # Provisional thresholds.
-        # Validate against project specifications.
 
         if prediction < 0.8:
 
@@ -352,20 +313,15 @@ if st.button(
             roughness and indicates a rougher finish.
             """)
 
-        # ==================================
-        # RESULT EXPLANATION
-        # ==================================
+        # Result Explanation
 
         st.subheader("💡 Understanding Your Result")
 
         left, right = st.columns(2)
 
         with left:
-
             with st.container(border=True):
-
                 st.markdown("### 🌊 Smoother Surface")
-
                 st.write("""
                 A lower Ra value generally indicates
                 a smoother machined surface with
@@ -373,37 +329,29 @@ if st.button(
                 """)
 
         with right:
-
             with st.container(border=True):
-
                 st.markdown("### ⚙️ Rougher Surface")
-
                 st.write("""
                 A higher Ra value generally indicates
                 a rougher machined surface with
                 larger surface irregularities.
                 """)
 
-        # ==================================
-        # SELECTED PARAMETERS
-        # ==================================
+        # Selected Parameters
 
         st.subheader("⚙️ Selected Machining Parameters")
 
         result_table = pd.DataFrame({
-
             "Machining Parameter": [
                 "Depth of Cut",
                 "Cutting Speed",
                 "Feed Rate"
             ],
-
             "Selected Value": [
                 f"{ap} mm",
                 f"{vc} m/min",
                 f"{f} mm/rev"
             ]
-
         })
 
         st.dataframe(
@@ -412,9 +360,7 @@ if st.button(
             hide_index=True
         )
 
-        # ==================================
-        # IMPORTANT NOTE
-        # ==================================
+        # Important Note
 
         st.info("""
         **Important Note**
@@ -431,7 +377,6 @@ if st.button(
         """)
 
     except Exception as e:
-
         st.error(f"Prediction error: {e}")
 
 # ==========================================
