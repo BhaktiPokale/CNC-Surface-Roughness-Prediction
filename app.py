@@ -237,17 +237,26 @@ with col1:
         step=0.05
     )
 
+
 with col2:
-    vc = st.selectbox(
+    vc = st.number_input(
         "⚡ Cutting Speed (m/min)",
-        [310, 350, 390]
+        min_value=310.0,
+        max_value=390.0,
+        value=350.0,
+        step=1.0
     )
 
 with col3:
-    f = st.selectbox(
+    f = st.number_input(
         "🔧 Feed Rate (mm/rev)",
-        [0.07, 0.10, 0.13]
+        min_value=0.07,
+        max_value=0.13,
+        value=0.10,
+        step=0.001,
+        format="%.3f"
     )
+
 
 st.markdown("---")
 
